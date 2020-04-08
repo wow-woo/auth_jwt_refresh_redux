@@ -10,14 +10,14 @@ router.post("/register", async (req, res) => {
   try {
     const isMatched = await User.findOne({ email: req.body.email });
 
-    if (isMatched) return res.redirect("http://localhost:3000/register");
+    if (isMatched) return res.json({ success: false, msg: "email occupied" });
 
     await User.create(req.body);
 
-    return res.redirect("http://localhost:3000/login");
+    return res.json({ success: true });
   } catch (err) {
     console.log(err.message);
-    return res.redirect("http://localhost:3000/");
+    return res.json({ success: false });
   }
 });
 
