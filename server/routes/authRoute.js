@@ -66,13 +66,16 @@ router.post("/login", async (req, res) => {
 router.get("/refresh_access_token", async (req, res) => {
   try {
     const refreshToken = await req.cookies["refresh"];
+    if (!refreshToken) {
+      return res.json({ success: false });
+    }
     console.log("old refresh token", refreshToken);
 
     const payload = await jwt.verify(
       refreshToken,
       process.env.REFRESH_TOKEN_SECRET
     );
-    if (!payload) return res.redirect("http://localhost:3000/login");
+    if (!payload) return res.sendStatus(401);
 
     const user = await User.findOne({ email: payload.email });
     if (!user) return res.json({ success: false, msg: "invalid token" });

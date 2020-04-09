@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 
 module.exports = async (req, res, next) => {
   const headers = await req.headers["auth_token"];
+  console.log("auth", headers);
 
   if (!headers) return res.sendStatus(401);
 
@@ -14,7 +15,7 @@ module.exports = async (req, res, next) => {
       if (err.message === "jwt expired") {
         return res.json({ err: err.message });
       }
-      return res.sendStatus(403);
+      return res.redirect("http://localhost:3000/login");
     }
 
     req.user = payload;
